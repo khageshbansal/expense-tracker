@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <h1 >Expense Tracker</h1>
+      <input id="input" type="number" placeholder="Amount"/>
+<textarea id="input2" type="text" placeholder="Description"></textarea>
+      <select id="mySelect">
+        <option>movie</option>
+        <option>electricity</option>
+        <option>food</option>
+        <option>rent</option>
+      </select>
+      <button onclick="addItem()">Submit</button>
+  <ul id="ul">
+  </ul>
+</body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<script>
+  // items array that contains all entries
+// JSON.parse is used to parse the stringified items from localStorage
+// if localStorage is empty, make the items variable an empty array
+var items = [];
+axios.get('https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata')
+  .then(res=>{it(res.data)})
+  .catch(err=>console.log(err));
+function it(it){items=it};
+
+
+
+// function to add item to the items array
+async function addItem() {
+  var inputBox = document.querySelector('#input');
+  var inputBox2 = document.querySelector('#input2');
+  var inputBox3 = document.getElementById("mySelect");
+  var item = inputBox.value;
+  var item2 = inputBox2.value;
+  var item3 = inputBox3.value;
+  if (item === "" || item2 === "" || item3 === "" )
+    return alert("Enter all values");
+
+  // If input is valid, add item to items array
+  let obj={
+    value: `${item}  ${item2}  ${item3}`
+  }
+
+  await axios.post('https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata',obj)
+  
+  // then convert to a string with JSON.stringify and save to localStorage
+  
+  
+  // call function to list all items
+
+  let res=await axios.get('https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata')
+  
+  await it(res.data)
+  await listItems(res.data)
+
+  // clear input box
+  inputBox.value = "";
+  inputBox2.value = "";
+}
+
+
+// function to remove item from array with Array.splice()
+// removes item, then saves new items array to localStorage
+async function deleteItem(index) {
+  await axios.delete(`https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata/${index}`)
+
+
+  
+  let res= await axios.get('https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata')
+  await it(res.data)
+  await listItems(res.data)
+}
+
+
+function editItem(index) {
+  var inputBox = document.querySelector('#input');
+  var inputBox2 = document.querySelector('#input2');
+  
+var deleteditem=  items.splice(index, 1)[0].value;
+var split=deleteditem.split(' ');
+inputBox.value=split[0];
+inputBox2.value=split[1];
+
+
+deleteItem(index);
+}
+
+
+// function that generates list of items and populates the html
+function listItems(items) {
+  var list = "";
+  for (var i = 0; i < items.length; i++) {
+    list+=`<li>${items[i].value}  <span style="border:2px solid green;cursor:pointer;" onclick='editItem("${items[i]._id}")'>Edit</span> <span style="cursor:pointer;border:2px solid red;" onclick='deleteItem("${items[i]._id}")'>delete</span></li>`
+  }
+  document.querySelector("#ul").innerHTML = list;
+}
+
+// function to run when page loads
+(async function() {
+  let res= await axios.get('https://crudcrud.com/api/94b6a46cbaa54b7ba036322e5eae9aff/appdata')
+  await it(res.data)
+  await listItems(res.data)
+})();
+</script>
+</html>
