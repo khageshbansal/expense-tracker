@@ -12,9 +12,9 @@ exports.loginUser = async(req, res, next) => {
 foundUsers.map((data)=>{
 if(data.email==email) {
 if(data.password == password) res.json({success:true,message:'User Logged in successfully'});
-else res.json({success:false,message:'Passwords do no match'});
+else res.status(401).json({success:false,message:'Passwords do no match', status: 401});
 }
-else res.json({success:false,message:'User does not exist. Fill correct credentials'});
+else res.status(404).json({success:false,message:'User does not exist. Fill correct credentials', status: 404});
 })
 
 
