@@ -1,5 +1,15 @@
 async function login(e){
-    await axios.get('localhost:3000/user');
+    if(e.target.tagName=='BUTTON'){
+        let form= e.target.parentElement;
+                let obj={
+                    email: form.email.value,
+                    password: form.password.value
+                };
+                
+           let res= await axios.post('http://localhost:3000/user/login',obj);
+           if(res.data.success==true)alert(res.data.message);
+           else alert(res.data.message);
+            }
 }
 
 async function signup(e){
@@ -10,8 +20,9 @@ let form= e.target.parentElement;
             email: form.email.value,
             password: form.password.value
         };
+       
         
-   let res= await axios.post('http://localhost:3000/user',obj);
+   let res= await axios.post('http://localhost:3000/user/signup',obj);
    console.log(res);
     }
 }

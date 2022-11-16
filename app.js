@@ -6,12 +6,12 @@ const cors = require('cors');
 const userController=require('./controller/user')
 const app = express();
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 const sequelize = require('./util/database');
 
-app.get('/user',userController.getUser);
+app.post('/user/login',userController.loginUser);
 
-app.post('/user',userController.postUser);
+app.post('/user/signup',userController.signupUser);
 
 console.log('sever started')
    

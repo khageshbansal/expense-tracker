@@ -1,16 +1,33 @@
 const User = require('../models/user');
 
-exports.getUser = async(req, res, next) => {
+exports.loginUser = async(req, res, next) => {
 
- await User.findAll().then(result=>{
-    res.json(result);
+  let  name =req.body.name;
+   let email=req.body.email;
+  let  password=req.body.password;
+
+ await User.findAll().then(foundUsers=>{
+
+
+foundUsers.map((data)=>{
+if(data.email==email) {
+if(data.password == password) res.json({success:true,message:'User Logged in successfully'});
+else res.json({success:false,message:'Passwords do no match'});
+}
+else res.json({success:false,message:'User does not exist. Fill correct credentials'});
+})
+
+
+
+
  })
  .catch(err=>console.log(err));
 };
 
 
-exports.postUser = async(req, res, next) => {
+exports.signupUser = async(req, res, next) => {
   
+   console.log(req.body);
  await User.create(
     {
     name : req.body.name,
