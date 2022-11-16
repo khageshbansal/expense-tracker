@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
 
 exports.loginUser = async(req, res, next) => {
 
@@ -6,35 +7,47 @@ exports.loginUser = async(req, res, next) => {
    let email=req.body.email;
   let  password=req.body.password;
 
- await User.findAll().then(foundUsers=>{
 
 
-foundUsers.map((data)=>{
-if(data.email==email) {
-if(data.password == password) res.json({success:true,message:'User Logged in successfully'});
-else res.status(401).json({success:false,message:'Passwords do no match', status: 401});
+ let foundUsers= await User.findAll({where:{email:email}});
+
+
+
+if(foundUsers.length) {
+for(var data of foundUsers){
+   let hash=data.password;
+
+   bcrypt.compare(password, hash, async function(err, result) {
+      if(result == true) res.json({success:true,message:'User Logged in successfully'});
+      else res.json({success:false,message:'Passwords do no match', status: 401});
+      
+  });
 }
-else res.status(404).json({success:false,message:'User does not exist. Fill correct credentials', status: 404});
-})
+  
+
+}
+else res.json({success:false,message:'User does not exist. Fill correct credentials', status: 404});
 
 
 
 
- })
- .catch(err=>console.log(err));
+
+
 };
 
 
-exports.signupUser = async(req, res, next) => {
+exports.signupUser = (req, res, next) => {
   
-   console.log(req.body);
- await User.create(
-    {
-    name : req.body.name,
-    email :req.body.email,
-    password :req.body.password
-  }
-  
-  ).then(result=>res.send(result))
-  .catch(err=>res.send(err));
+   bcrypt.hash(req.body.password, 10, async function(err, hash) {
+      await User.create(
+         {
+         name : req.body.name,
+         email :req.body.email,
+         password :hash
+       }
+       
+       ).then(result=>res.send(result))
+       .catch(err=>res.send(err));
+  });
+ 
 };
