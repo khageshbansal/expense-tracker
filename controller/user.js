@@ -1,12 +1,12 @@
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
 
 exports.loginUser = async(req, res, next) => {
 
   let  name =req.body.name;
    let email=req.body.email;
   let  password=req.body.password;
-
 
 
  let foundUsers= await User.findAll({where:{email:email}});
@@ -18,7 +18,11 @@ for(var data of foundUsers){
    let hash=data.password;
 
    bcrypt.compare(password, hash, async function(err, result) {
-      if(result == true) res.json({success:true,message:'User Logged in successfully'});
+      if(result == true) res.json(
+         {
+            success:true,message:'User Logged in successfully',token: jwt.sign({ userid: data.id,name:data.name }, 'SectretKey') 
+          }
+         );
       else res.json({success:false,message:'Passwords do no match', status: 401});
       
   });

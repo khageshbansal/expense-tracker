@@ -6,10 +6,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const userController=require('./controller/user')
 const expenseController=require('./controller/expense')
+const midddleware=require('./middleware')
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 const sequelize = require('./util/database');
+const Expense = require("./models/expense");
+const User = require("./models/user");
 
 
 app.post('/user/login',userController.loginUser);
@@ -22,13 +25,14 @@ console.log('sever started')
 
 
 
-app.get("/expense", expenseController.getuser);
+app.get("/expense",midddleware.auth, expenseController.getExpense);
+app.get("/loggedInUser",midddleware.auth, expenseController.loggedInUser);
+app.post("/expense",midddleware.auth, expenseController.postExpense);
+app.delete("/expense/:id", expenseController.deleteExpense);
+app.get("/expense/:id", expenseController.getsingleExpense);
 
-app.post("/expense", expenseController.postuser);
-app.delete("/expense/:id", expenseController.deleteuser);
-app.get("/expense/:id", expenseController.getsingleuser);
-
-
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 sequelize
 // .sync({ force: true })

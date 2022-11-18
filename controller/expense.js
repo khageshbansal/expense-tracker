@@ -1,30 +1,41 @@
 
 
-const User = require("../models/expense");
+const Expense = require("../models/expense");
 
-exports.getuser = (req, res, next) => {
-  User.findAll()
-    .then((users) => {
-      res.json(users);
+
+exports.loggedInUser = (req, res, next) => {
+      res.json(req.user);
+};
+
+
+exports.getExpense = (req, res, next) => {
+
+  // Expense.findAll({where:{userId:req.user.id}})
+  req.user.getExpenses()
+    .then((Expenses) => {
+      res.json(Expenses);
     })
     .catch((err) => console.log(err));
 };
 
-exports.postuser = async (req, res, next) => {
+exports.postExpense = async (req, res, next) => {
   let data = {
     amount: req.body.amount,
     description: req.body.description,
     category: req.body.category,
+    // userId:req.user.id
   };
-  console.log(data);
-  await User.create(data)
+
+  //  await Expense.create(data)
+  await req.user.createExpense(data)
+ 
     .then((result) => {res.json(result)})
     .catch((err) => console.log(err));
 };
 
-exports.deleteuser = (req, res, next) => {
+exports.deleteExpense = (req, res, next) => {
   let uid = req.params.id;
-  User.destroy({ where: { id: uid } })
+  Expense.destroy({ where: { id: uid } })
     .then((res) => {
       console.log(res);
     })
@@ -32,9 +43,9 @@ exports.deleteuser = (req, res, next) => {
   res.end();
 };
 
-exports.getsingleuser = (req, res, next) => {
+exports.getsingleExpense = (req, res, next) => {
   let uid = req.params.id;
-  User.findByPk(uid)
+  Expense.findByPk(uid)
     .then((result) => {
       res.json(result);
     })
