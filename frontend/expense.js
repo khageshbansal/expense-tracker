@@ -1,4 +1,5 @@
 
+
 let token=localStorage.getItem('token');
 
 // function to run when page loads
@@ -14,12 +15,90 @@ let token=localStorage.getItem('token');
     and userid is <bold>${res.data.id}</bold>. 
     <a onclick='localStorage.setItem("token","")' href='login.html' >click here </a>to logout`
 console.log(res.data)
-    if(res.data.ispremiumuser==true){
-      document.body.style.background = "black";
-      document.body.style.color = "white";
-      document.querySelector('#buyPremium').innerHTML='Congrats You are a Premium User';
+
+
+    if(res.data.ispremiumuser==true) ispremiumuser(res.data);
   }
+
+  async function ispremiumuser(loggedinUser){
+
+document.querySelector('#buyPremium').innerHTML='Congrats You are a Premium User';
+
+let res = await axios.get("http://localhost:3000/getallusers");
+
+  let data=res.data;
+
+let tableopen=`  <table class="table">
+<thead class="thead-dark">
+  <tr>
+    <th scope="col">id</th>
+    <th scope="col">name</th>
+    <th scope="col">email</th>
+    <th scope="col">ispremium</th>
+    <th scope="col">created at</th>
+  </tr>
+</thead>
+<tbody  >`
+
+
+
+  var list = "";
+  for(let i=0;i<data.length;i++){
+    let premium;
+    if(data[i].ispremiumuser==1)premium='true'
+    else premium='false'
+
+    list=list+`     <tr>
+  
+    <td>${data[i].id}</td>
+    <td> ${data[i].name}
+    
+    
+    <div class="accordion accordion-flush" id="accordionFlushExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="flush-headingOne">
+        <button onclick="userExpenses(${data[i].id})" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+         View User Expenses
+        </button>
+      </h2>
+      <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+        <div class="accordion-body" id='accordian-body'></div>
+      </div>
+    </div>
+  </div>
+
+    
+    
+    </td>
+    <td>${data[i].email}</td>
+    <td>${premium}</td>
+    <td>${data[i].createdAt}</td>
+    </tr>
+    `
+  } 
+
+  let tableClose=`  </tbody></table>`
+
+  
+
+  
+    document.querySelector('#leaderboard').innerHTML=tableopen+ list+ tableClose;
+
+}
+
+async function userExpenses(id){
+  let res = await axios.get(`http://localhost:3000/getuserexpenses?id=${id}`);
+ 
+  let items = res.data;
+  var list = "";
+  for (var i in items) {
+    list += `<li class="list-group-item"> ${items[i].amount} / ${items[i].description} / ${items[i].category}
+</li>`;
   }
+
+document.querySelector('#accordian-body').innerHTML=list;
+}
+  
   
   async function listItems() {
     let res = await axios.get("http://localhost:3000/expense", {headers: {Authorization: localStorage.getItem('token') } } );
@@ -126,3 +205,5 @@ console.log(res.data)
   alert(response.error.metadata.payment_id);
  });
 }
+
+
