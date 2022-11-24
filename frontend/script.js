@@ -32,8 +32,4 @@ let form= e.target.parentElement;
 }
 
 
-let forgot=async()=>{
-    console.log('d')
-    await axios.post('http://localhost:3000//password/forgotpassword');
-}
 

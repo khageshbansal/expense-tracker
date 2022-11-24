@@ -8,6 +8,7 @@ const userController=require('./controller/user')
 const expenseController=require('./controller/expense')
 const razorController=require('./controller/razorpay')
 const premiumController=require('./controller/premium')
+const resetpasswordController=require('./controller/forgotPass')
 const midddleware=require('./middleware')
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ const sequelize = require('./util/database');
 const Expense = require("./models/expense");
 const User = require("./models/user");
 const Order = require("./models/orders");
+const Forgotpassword = require('./models/forgotpassword');
 
 const dotenv = require('dotenv');
 
@@ -46,12 +48,22 @@ app.get('/getallusers',premiumController.getAllUsers);
 app.get('/getuserexpenses',premiumController.getuserexpenses);
 
 
+
+
+app.get('/updatepassword/:resetpasswordid', resetpasswordController.updatepassword)
+
+app.get('/resetpassword/:id', resetpasswordController.resetpassword)
+
+app.use('/forgotpassword', resetpasswordController.forgotpassword)
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
 
+User.hasMany(Forgotpassword);
+Forgotpassword.belongsTo(User);
 
   
 
