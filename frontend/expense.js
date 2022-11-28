@@ -206,4 +206,14 @@ document.querySelector('#accordian-body').innerHTML=list;
  });
 }
 
+async function download(){
+  
+  let res= await axios.get('http://localhost:3000/downloadExpenses',{ headers: {"Authorization" : token} });
+  console.log(res.data.data);
+
+  var link = document.createElement("a");
+  link.href = res.data.data.Location;
+  link.click();
+  
+}
 

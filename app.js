@@ -56,6 +56,8 @@ app.get('/resetpassword/:id', resetpasswordController.resetpassword)
 
 app.use('/forgotpassword', resetpasswordController.forgotpassword)
 
+app.use('/downloadExpenses',midddleware.auth, expenseController.downloadExpenses)
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
