@@ -20,7 +20,7 @@ for(var data of foundUsers){
    bcrypt.compare(password, hash, async function(err, result) {
       if(result == true) res.json(
          {
-            success:true,message:'User Logged in successfully',token: jwt.sign({ userid: data.id,name:data.name }, 'SectretKey') 
+            success:true,message:'User Logged in successfully',token: jwt.sign({ userid: data.id,name:data.name }, process.env.jwt_key) 
           }
          );
       else res.json({success:false,message:'Passwords do no match', status: 401});

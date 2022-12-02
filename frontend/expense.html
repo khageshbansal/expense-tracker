@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.1/datatables.min.css"/>
+ 
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
     <!-- CSS only -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
@@ -32,7 +35,7 @@
     <hr class="mb-5" />
     <div class="container">
       <div class="row">
-        <form class="col-sm">
+        <form class="col-3">
           <div class="form-group">
             
             <label for="amount">amount</label>
@@ -72,7 +75,7 @@
           </button>
         </form>
 
-
+<div class="col-1"></div>
         
 
         <div class="col-sm">
@@ -81,7 +84,37 @@
           </div>
 
           <h4 class="text-center" >Expenses</h4>
-          <ol class="list-group" id="ul"></ol>
+         
+          <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jq-3.6.0/dt-1.13.1/datatables.min.js"></script>
+
+          <table id="example" class="display compact" style="width:100%">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>amount</th>
+                    <th>description</th>
+                    <th>category</th>
+                    <th>userId</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                   
+                </tr>
+            </thead>
+            <tbody id="ul">
+              <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011-04-25</td>
+                <td>$320,800</td>
+            </tr>
+            </tbody>
+            
+        </table>
+        
+
+
         </div>
       </div>
     </div>
@@ -102,35 +135,14 @@
 
 
 
+ 
+<script>
+  
+// let table = new DataTable('#example', {
+//     // options
+// });
+</script>
 
-
-<!-- 
-
-  <div>
-    <h2 class="text-center">Daily/monthly expenses</h2>
-    <div class="download-button mr-5" style="position: absolute;right:0;">
-      <button type="button" class="btn btn-success">Download</button>
-    </div>
-  <table class="table table-striped w-50 mx-auto mt-5">
-    <thead>
-      <tr>
-        <th scope="col">date</th>
-        <th scope="col">description</th>
-        <th scope="col">category</th>
-        <th scope="col">expense</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-     
-    </tbody>
-  </table>
-</div> -->
 
   </body>
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

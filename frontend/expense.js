@@ -14,7 +14,7 @@ let token=localStorage.getItem('token');
     document.querySelector("#user").innerHTML=`Hello <bold>${res.data.name}</bold>! Your Email Id is <bold>${res.data.email}</bold> 
     and userid is <bold>${res.data.id}</bold>. 
     <a onclick='localStorage.setItem("token","")' href='login.html' >click here </a>to logout`
-console.log(res.data)
+
 
 
     if(res.data.ispremiumuser==true) ispremiumuser(res.data);
@@ -105,13 +105,28 @@ document.querySelector('#accordian-body').innerHTML=list;
     let items = res.data;
     var list = "";
     for (var i in items) {
-      list += `<li class="list-group-item"> ${items[i].amount} / ${items[i].description} / ${items[i].category}
-      
-  <button type="button" class="btn btn-success btn-sm" onclick='editItem("${items[i].id}")' >Edit</button>
-  <button type="button" class="btn btn-danger btn-sm" onclick='deleteItem("${items[i].id}")' >Delete</button>
-  </li>`;
+      list +=
+
+  ` <tr>
+  <td>${items[i].id}</td>
+  <td>${items[i].amount}</td>
+  <td>${items[i].description}</td>
+  <td>${items[i].category}</td>
+  <td>${items[i].userId}</td>
+  <td> <button type="button" class="btn btn-success btn-sm" onclick='editItem("${items[i].id}")' >Edit</button> </td>
+  <td>   <button type="button" class="btn btn-danger btn-sm" onclick='deleteItem("${items[i].id}")' >Delete</button> </td>
+</tr>`;
     }
     document.querySelector("#ul").innerHTML = list;
+
+console.log(res.data);
+   
+$(document).ready(function () {
+  $('#example').DataTable();
+});
+
+
+  
   }
   
   async function addItem() {
@@ -209,7 +224,7 @@ document.querySelector('#accordian-body').innerHTML=list;
 async function download(){
   
   let res= await axios.get('http://localhost:3000/downloadExpenses',{ headers: {"Authorization" : token} });
-  console.log(res.data.data);
+  console.log(res.data);
 
   var link = document.createElement("a");
   link.href = res.data.data.Location;

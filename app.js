@@ -4,6 +4,10 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
+
+
 const userController=require('./controller/user')
 const expenseController=require('./controller/expense')
 const razorController=require('./controller/razorpay')
@@ -19,10 +23,7 @@ const User = require("./models/user");
 const Order = require("./models/orders");
 const Forgotpassword = require('./models/forgotpassword');
 
-const dotenv = require('dotenv');
 
-// get config vars
-dotenv.config();
 
 app.post('/user/login',userController.loginUser);
 

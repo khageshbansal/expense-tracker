@@ -63,7 +63,7 @@ exports.downloadExpenses =  async (req, res, next) => {
 
   try {
       if(!req.user.ispremiumuser)res.json({ success: false, message: 'User is not a premium User'})
-      
+      else{
 let s3 = new AWS.S3({
   accessKeyId: process.env.aws_access_key,
   secretAccessKey: process.env.aws_secret_key,
@@ -83,6 +83,7 @@ s3.upload(config, function (err, data) {
   console.log(err, data)
   res.json({data:data,success:true})
 })
+      }
 
 } catch(err) {
     console.log(err);
